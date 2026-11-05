@@ -764,6 +764,75 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
  .compare-handle .icon{width:17px;height:17px}
 }
 
+/* Phone presentation: keep the copy and the interactive model on separate surfaces. */
+@media (max-width:600px) and (orientation:portrait),
+       (pointer:coarse) and (orientation:landscape) and (max-width:980px) and (max-height:500px){
+ :root{--head:52px;--text-top:14px;--phone-model-controls:44px}
+ .deck-on .shell,.deck-on .slide{touch-action:pan-y pinch-zoom}
+ .deck-on .slide{pointer-events:auto;scrollbar-gutter:auto}
+ .slide-grid,.slide-grid.cover-layout{padding-block:var(--text-top) 14px}
+ .slide .slide-copy>h1,.slide .slide-copy>h2{
+  min-height:0;font-size:clamp(27px,7.5vw,37px);line-height:1.08;letter-spacing:-.045em;
+ }
+ .slide .slide-copy>:is(h1,h2) br{display:none}
+ .slide-copy .chapter-kicker{margin-bottom:6px}
+ .slide .intro,.on-cover .cover-layout .intro{font-size:15px;line-height:1.38;margin-top:7px}
+ .topbar .icon-button{width:44px;height:44px}
+ .shell > .process-dock .process-inner{
+  grid-template-columns:44px minmax(0,1fr) 44px;gap:3px;padding:4px 7px;
+ }
+ .shell > .process-dock .icon-button{width:44px;height:44px}
+ .shell > .process-dock .chain-node a{min-height:44px;justify-content:center;padding-top:1px}
+ .shell > .process-dock .chain-line{top:13px}
+ .address-form{gap:5px;margin-top:9px}
+ .segmented button,.scenario-tabs button{min-height:36px}
+ .budget-ruler input{height:42px}
+ .model-layout{border-top:1px solid var(--line)}
+ #modul-01.is-current ~ .model-layout .model-art,
+ .model-frame:not([data-cover-comparison],[data-scenario-comparison]) .model-art,
+ .model-frame .address-playback{bottom:var(--phone-model-controls)}
+ .model-meta{inset:auto 0 0;min-height:var(--phone-model-controls)}
+ .model-status{min-width:0;font-size:11px}
+ .model-reset{flex:none;width:44px;height:44px}
+ .model-frame:focus-visible{outline-offset:-2px}
+}
+
+@media (max-width:600px) and (orientation:portrait){
+ :root{--model-height:clamp(150px,32dvh,305px)}
+ .on-cover{--model-height:clamp(160px,34dvh,325px)}
+ .on-plan{--model-height:clamp(139px,calc(100dvh - 603px),322px)}
+ .on-scenario{--model-height:clamp(144px,calc(100dvh - 540px),340px)}
+ html:has(#modul-04.is-current){--model-height:clamp(152px,calc(100dvh - 551px),365px)}
+ html:has(#modul-05.is-current){--model-height:clamp(145px,calc(100dvh - 619px),315px)}
+}
+@media (max-width:600px) and (max-height:700px) and (orientation:portrait){
+ .on-cover{--model-height:clamp(140px,26dvh,190px)}
+ html.deck-on:has(#modul-01.is-current #address-scene:not([hidden])){--model-height:clamp(139px,27dvh,194px)}
+ html.deck-on:has(#modul-01.is-current #erster-stand:not([hidden])){--model-height:clamp(128px,24dvh,169px)}
+}
+@media (max-width:355px) and (orientation:portrait){
+ .shell > .process-dock .chain-short{font-size:9.5px}
+}
+@media (pointer:coarse) and (orientation:landscape) and (max-width:980px) and (max-height:500px){
+ :root{--head:47px;--text-top:10px;--gutter:clamp(14px,3vw,25px)}
+ .deck-on.on-cover .shell{grid-template-rows:var(--head) minmax(0,1fr) auto}
+ .deck-on .slide{right:46%;bottom:0}
+ .slide-grid,.slide-grid.cover-layout{grid-template-columns:minmax(0,1fr);gap:0}
+ .slide .slide-copy>h1,.slide .slide-copy>h2{font-size:clamp(24px,4.1vw,32px)}
+ .slide .intro,.on-cover .cover-layout .intro{font-size:14px;line-height:1.3;margin-top:6px}
+ .address-form{gap:4px;margin-top:7px}
+ .address-field input{padding-block:7px;font-size:16px}
+ .address-form .button{min-height:40px;margin-top:0;padding-block:8px}
+ .price-target{margin-top:9px;padding:9px 11px}
+ .budget-values{margin-top:6px}
+ .budget-verdict{min-height:18px}
+ .model-layout{inset:0 0 0 54%;height:auto;grid-template-columns:minmax(0,1fr);gap:0;border-top:0;border-left:1px solid var(--line)}
+ .model-frame{grid-column:1;height:100%}
+ .model-status{font-size:10px}
+ .shell > .process-dock .process-inner{padding-block:2px}
+ .on-scenario .compare-view{width:min(100%,calc((100cqh - 37px) * 853 / 617));transform:translateY(4px)}
+}
+
 .energy-scale{
   --energy-current:66.9455%;
   --energy-target:42.1818%;
@@ -1390,7 +1459,7 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
   <div class="slide-grid cover-layout wrap">
     <div class="slide-copy">
       <p class="chapter-kicker">Nexura / Überblick</p>
-      <h1 id="title-intro">Energetisch<br>sanieren.</h1>
+      <h1 id="title-intro">Energetisch<br> sanieren.</h1>
       <p class="intro">Fünf Schritte von der Adresse bis zum Sanierungsstart.</p>
       <div id="intro-process"><p class="intro-process-title">Ihr Sanierungsfahrplan</p></div>
       <a class="button primary btn btn--primary intro-start" id="tour-start" href="#modul-01">Beispiel starten <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
@@ -1401,7 +1470,7 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
   <div class="slide-grid address-scene wrap" id="address-scene">
     <div class="slide-copy">
       <p class="chapter-kicker">01 / Gebäude verstehen</p>
-      <h2 id="title-01">Das erste<br>Gebäudebild.</h2>
+      <h2 id="title-01">Das erste<br> Gebäudebild.</h2>
       <p class="intro">Aus der Adresse entsteht ein einfaches Volumenmodell mit ersten Maßen.</p>
       <form id="address-form" class="address-form">
           <label for="address">Gebäudeadresse</label>
@@ -3315,6 +3384,9 @@ const slides=$$('.deck-stage > .slide'), dock=$('.process-dock'), count=$('#coun
 const nodes=$$('.chain-node',dock), prevButton=$('#deck-prev'),nextButton=$('#deck-next');
 const dockHome=dock.parentElement, introProcess=$('#intro-process'), handover=$('#handover');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+const phoneLayout=matchMedia(
+  '(max-width: 600px) and (orientation: portrait), (pointer: coarse) and (orientation: landscape) and (max-width: 980px) and (max-height: 500px)',
+);
 const frame=$('#model-frame'), modelStatus=$('#model-status'), addressScene=$('#address-scene'), result=$('#erster-stand');
 const houseHost=$('#house3d-host'), resetHouse=$('#model-reset');
 const investmentCue=$('#investment-cue'), investmentCallout=$('.investment-callout',investmentCue);
@@ -4100,7 +4172,8 @@ function renderInvestmentCue(point){
   const preferredSpace=prefersRight?rightSpace:leftSpace;
   const right=preferredSpace>=w?prefersRight:rightSpace>leftSpace;
   const left=Math.round(clamp(right?x+gap:x-w-gap,margin,width-w-margin));
-  const top=Math.round(clamp(y-h*.75-9,margin,height-h-(height>260?45:36)));
+  const bottomClearance=phoneLayout.matches?7:(height>260?45:36);
+  const top=Math.round(clamp(y-h*.75-9,margin,height-h-bottomClearance));
   const edge=right?left:left+w, endY=top+h/2;
   investmentCallout.style.transform='translate('+left+'px,'+top+'px)';
   investmentLine.setAttribute('d','M'+x+' '+y+' L'+(edge+(right?-7:7))+' '+endY+' H'+edge);
@@ -4306,6 +4379,8 @@ let tourTouch, touchClickUntil=0;
 shell.addEventListener('pointerdown',event=>{
   if(event.pointerType!=='touch')return;
   if(!event.isPrimary){tourTouch=null;return;}
+  // On phones the copy scrolls natively, while the model remains the tour surface.
+  if(phoneLayout.matches&&event.target.closest('.slide'))return;
   const field=editingTarget(event.target);
   if(field&&field!==compareRange)return;
   tourTouch={id:event.pointerId,target:event.target,x:event.clientX,y:event.clientY,
