@@ -643,6 +643,7 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
  .compare-legend{top:2%;left:2%;right:2%}
  .on-scenario .compare-view{width:min(100%,calc((100cqh - 48px) * 853 / 617));transform:translateY(6px)}
  .compare-legend strong{font-size:12px}
+ .cover-comparison[data-narrow-before] .compare-legend div:first-child strong{visibility:hidden}
  .compare-legend span{font-size:10px}
  .compare-handle{width:42px;height:42px}
  .compare-hint{bottom:3%;left:2%;font-size:10px}
@@ -2957,6 +2958,7 @@ function setComparisonSplit(value,{quiet=false}={}){
   if(planning)scenarioSplit=split;else coverSplit=split;
   const rounded=Math.round(split);
   compareView.style.setProperty('--comparison-split',split+'%');
+  comparison.toggleAttribute('data-narrow-before',planning&&rounded<31);
   compareRange.value=String(rounded);
   if(coverComparisonActive())setSceneMarker(1-split/100);
   if(quiet)return;
