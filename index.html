@@ -540,13 +540,6 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
 /* The artwork is the scrub surface. Text columns keep their own native scrolling. */
 .model-frame{touch-action:none}
 .model-frame:focus-visible{outline-offset:2px}
-.scene-scrub-hint{margin-left:auto;color:#52635c;font-size:12px;text-align:right}
-.scene-scrub-hint span:last-child{display:none}
-@media(pointer:coarse){
- .scene-scrub-hint span:first-child{display:none}
- .scene-scrub-hint span:last-child{display:inline}
-}
-@media(max-width:800px){.scene-scrub-hint{font-size:10px}}
 
 /* The same process navigation forms a vertical roadmap on the overview. */
 #intro-process{--route-dot:29px;--route-row:40px;margin-top:22px;max-width:400px}
@@ -1850,7 +1843,6 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
     </div>
     <div class="model-meta">
       <div class="model-status"><span></span><b id="model-status" aria-live="polite">Beispielhaus vor der Sanierung</b></div>
-      <span class="scene-scrub-hint" aria-hidden="true"><span>Scrollen zum Spulen</span><span>Vertikal wischen zum Spulen</span></span>
       <button class="model-reset btn btn--secondary" id="model-reset" type="button" hidden aria-label="3D-Ansicht zurücksetzen" title="Ansicht zurücksetzen"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#i-view-reset"/></svg></button>
     </div>
     <p id="scene-scrub-instructions" class="sr-only">Scrollen oder vertikal wischen, um Animationen zu spulen und durch die Präsentation zu gehen. Mit Bild ab und Bild auf geht es auch per Tastatur.</p>
@@ -3324,7 +3316,7 @@ function syncComparison(animate){
   compareLabel.textContent=planning&&scenarioView!=='combined'?'Zwischenstand':'Nachher';
   compareDetail.textContent=planning?scenarios[scenarioView].comparison:'Modernisiertes Haus';
   compareHint.textContent=planning
-    ?(live?'Ziehen zum Vergleichen · Scrollen zum Spulen':
+    ?(live?'Ziehen zum Vergleichen':
       scenarioView==='combined'?'Weiter zu den Angeboten scrollen':'Scrollen zur nächsten Variante')
     :'Scrollen zum Starten · Ziehen zum Vergleichen';
   compareRange.setAttribute('aria-label',planning?'Bestand und Sanierungsvariante vergleichen':'Vorher und nachher vergleichen');
