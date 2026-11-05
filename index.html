@@ -767,41 +767,59 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
   .energy-scale-target,.energy-scale-pointer-target{transition:none}
 }
 
-/* The quantities column is the focal point of the example schedule. */
+/* Align the GAEB-style title numbers and position columns in each example LV. */
 #modul-04 .quote-card{
+ --lv-oz-width:59px;
+ --lv-columns:var(--lv-oz-width) minmax(0,1fr) 50px 37px;
+ --lv-gap:8px;
  margin-top:16px;
- padding:12px 13px 3px;
+ padding:11px 13px 0;
  border:1px solid var(--line);
  background:var(--paper);
 }
-#modul-04 .feature-head{margin-bottom:7px}
-#modul-04 .mini-kicker{color:var(--green);font-weight:650}
+#modul-04 .feature-head{display:block;margin-bottom:7px}
+#modul-04 .lv-meta{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:4px}
+#modul-04 .mini-kicker{margin:0;color:var(--green);font-weight:700}
+#modul-04 .lv-phase{display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:11px;white-space:nowrap}
+#modul-04 .lv-phase b{border:1px solid #bdd0c7;border-radius:2px;padding:1px 4px;color:var(--green);font:700 10px/1.25 var(--mono)}
 #modul-04 .position-head,#modul-04 .quote-card summary{
- grid-template-columns:24px minmax(0,1fr) minmax(77px,max-content);
- gap:7px;
+ grid-template-columns:var(--lv-columns);
+ gap:var(--lv-gap);
 }
-#modul-04 .position-head span:last-child{
- text-align:right;
- color:var(--green);
- font-weight:700;
+#modul-04 .position-head{padding-block:4px;line-height:1.3}
+#modul-04 .position-head span:nth-child(3){text-align:right;color:var(--green);font-weight:700}
+#modul-04 .position-head span:last-child{color:var(--muted)}
+#modul-04 .position-head abbr{text-decoration:none}
+#modul-04 .lv-group-title{
+ display:grid;grid-template-columns:var(--lv-oz-width) minmax(0,1fr);gap:var(--lv-gap);align-items:center;
+ margin:0;padding:2px 0;border-top:1px solid #d9e5de;
+ background:#f1f6f2;color:#244d3d;font-size:12px;font-weight:710;line-height:1.25;
 }
+#modul-04 .lv-group-title span{padding-left:3px;font:650 11px/1.3 var(--mono)}
+#modul-04 .quote-card summary{padding-block:4px;font-size:13px;line-height:1.3}
 #modul-04 .quote-card summary b{font-weight:645}
 #modul-04 .quote-card details:last-child{border-bottom:0}
-#modul-04 .quote-card details p{padding-left:31px}
+#modul-04 .lv-oz,#modul-04 .lv-unit{color:var(--muted);font:600 11px/1.3 var(--mono)}
 #modul-04 .lv-amount{
- justify-self:end;
- color:var(--green);
- font-variant-numeric:tabular-nums;
- white-space:nowrap;
+ justify-self:end;color:var(--green);font-variant-numeric:tabular-nums;white-space:nowrap;
 }
-#modul-04 .lv-amount strong{font-size:15px;font-weight:750}
-#modul-04 .lv-amount small{font-size:11px}
+#modul-04 .lv-amount strong{font-size:14px;font-weight:750}
+#modul-04 .lv-details{padding:2px 0 8px calc(var(--lv-oz-width) + var(--lv-gap));background:#f9fbfa}
+#modul-04 .lv-details p{margin:0;padding:4px 6px 0 0;font-size:12px;line-height:1.35}
+#modul-04 .lv-details b{display:block;margin-bottom:1px;color:var(--ink);font-weight:700}
+#modul-04 .lv-details b::after{content:none}
+#modul-04 .lv-footnote{
+ display:flex;flex-wrap:wrap;gap:1px 9px;margin:0;padding:6px 0 8px;border-top:1px solid var(--line);
+ color:var(--muted);font-size:11px;line-height:1.3;
+}
+#modul-04 .lv-footnote span{color:var(--green);font-weight:700;white-space:nowrap}
 @media(max-width:800px){
- html:has(#modul-04.is-current){--model-height:clamp(128px,calc(100dvh - 632px),335px)}
- #modul-04 .quote-card{margin-top:11px;padding:9px 10px 2px}
- #modul-04 .quote-card summary{padding-block:6px;font-size:13px;line-height:1.25}
- #modul-04 .quote-card details p{font-size:12px;line-height:1.35}
- #modul-04 .lv-amount strong{font-size:14px}
+ html:has(#modul-04.is-current){--model-height:clamp(120px,calc(100dvh - 657px),325px)}
+ #modul-04 .quote-card{--lv-oz-width:50px;--lv-columns:var(--lv-oz-width) minmax(0,1fr) 42px 32px;--lv-gap:6px;margin-top:11px;padding:9px 10px 0}
+ #modul-04 .position-head{font-size:11px}
+ #modul-04 .quote-card summary{padding-block:5px;font-size:12px;line-height:1.25}
+ #modul-04 .lv-amount strong{font-size:13px}
+ #modul-04 .lv-footnote{font-size:10px}
 }
 @media(max-width:800px) and (max-height:700px){
  html:has(#modul-04.is-current){--model-height:clamp(105px,18dvh,137px)}
@@ -809,15 +827,13 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
  #modul-04 .slide-copy>h2{font-size:clamp(26px,7.8vw,36px);min-height:0}
  #modul-04 h2 br{display:none}
  #modul-04 .intro{margin-top:6px;font-size:14px;line-height:1.35}
- #modul-04 .quote-card{margin-top:8px;padding:7px 8px 2px}
+ #modul-04 .quote-card{margin-top:8px;padding:7px 8px 0;--lv-gap:4px;--lv-oz-width:47px;--lv-columns:var(--lv-oz-width) minmax(0,1fr) 35px 30px}
  #modul-04 .feature-head h3{font-size:16px}
- #modul-04 .feature-head .mini-kicker{font-size:11px;margin-bottom:2px}
- #modul-04 .feature-head{margin-bottom:2px}
- #modul-04 .position-head,#modul-04 .quote-card summary{grid-template-columns:18px minmax(0,1fr) minmax(65px,max-content);gap:5px}
- #modul-04 .position-head{padding-block:3px;font-size:11px}
- #modul-04 .position-head span:first-child{font-size:10px}
- #modul-04 .quote-card summary{padding-block:4px;font-size:12px}
- #modul-04 .quote-card details p{padding-bottom:6px}
+ #modul-04 .feature-head .mini-kicker{font-size:11px}
+ #modul-04 .feature-head{margin-bottom:4px}
+ #modul-04 .position-head{padding-block:3px}
+ #modul-04 .quote-card summary{padding-block:4px}
+ #modul-04 .quote-card summary b::after{margin-left:4px}
 }
 
 .upload-panel{max-width:490px;margin-top:9px}
@@ -1502,62 +1518,138 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
     <div class="slide-copy">
       <p class="chapter-kicker">04 / Umsetzung vorbereiten</p>
       <h2 id="title-04">Mengen<br> ins LV.</h2>
-      <p class="intro">Wir leiten Mengen aus dem Modell ab und erstellen das Leistungsverzeichnis.</p>
+      <p class="intro">Modellmengen fließen ins LV nach GAEB. So fragen Sie vergleichbare Angebote an.</p>
       <div class="quote-card feature-card" data-offer-variant="roof" data-offer-state="offers" data-offer-label="Dach und Solarmodule im Modell">
-        <div class="feature-head"><div><p class="mini-kicker">Modellmengen · Beispielhaus</p><h3>Dach und Photovoltaik</h3></div></div>
-        <div class="position-head"><span>Pos.</span><span>Leistung</span><span>Menge</span></div>
-        <details>
-          <summary><span>01</span><b>Dach dämmen und neu decken</b><span class="lv-amount"><strong>78,7</strong> <small>m²</small></span></summary>
-          <p>Bruttofläche beider Dachseiten mit Dachüberstand.</p>
-        </details>
-        <details>
-          <summary><span>02</span><b>Dachanschlüsse erneuern</b><span class="lv-amount"><strong>35,6</strong> <small>m</small></span></summary>
-          <p>Länge der Traufen und Ortgänge aus den Dachkanten.</p>
-        </details>
-        <details>
-          <summary><span>03</span><b>Photovoltaik montieren</b><span class="lv-amount"><strong>8</strong> <small>Module</small></span></summary>
-          <p>Solarmodule im Modell gezählt. Unterkonstruktion, Wechselrichter und Anschluss ergänzen die Position.</p>
-        </details>
+        <div class="feature-head">
+          <div class="lv-meta"><p class="mini-kicker">Beispiel-LV</p><span class="lv-phase"><b>X83</b> Angebotsaufforderung</span></div>
+          <h3>Dach und Photovoltaik</h3>
+        </div>
+        <div class="position-head"><span><abbr title="Ordnungszahl">OZ</abbr></span><span>Kurztext</span><span>Menge</span><span>Einheit</span></div>
+        <section class="lv-group" aria-labelledby="lv-roof-01">
+          <h4 class="lv-group-title" id="lv-roof-01"><span>01</span>Dacharbeiten</h4>
+          <details>
+            <summary><span class="lv-oz">01.0010</span><b>Dach dämmen und decken</b><span class="lv-amount"><strong>78,7</strong></span><span class="lv-unit">m²</span></summary>
+            <div class="lv-details">
+              <p><b>Langtext</b> Beide geneigten Dachflächen des Wohnhauses dämmen und neu eindecken.</p>
+              <p><b>Modellmenge</b> Bruttofläche beider Dachseiten einschließlich Überständen.</p>
+            </div>
+          </details>
+          <details>
+            <summary><span class="lv-oz">01.0020</span><b>Dachanschlüsse erneuern</b><span class="lv-amount"><strong>35,6</strong></span><span class="lv-unit">m</span></summary>
+            <div class="lv-details">
+              <p><b>Langtext</b> Trauf- und Ortganganschlüsse der neuen Dachdeckung herstellen.</p>
+              <p><b>Modellmenge</b> Summe der Trauf- und Ortganglängen aus dem Dachmodell.</p>
+            </div>
+          </details>
+        </section>
+        <section class="lv-group" aria-labelledby="lv-roof-02">
+          <h4 class="lv-group-title" id="lv-roof-02"><span>02</span>Photovoltaik</h4>
+          <details>
+            <summary><span class="lv-oz">02.0010</span><b>PV-Module montieren</b><span class="lv-amount"><strong>8</strong></span><span class="lv-unit">St</span></summary>
+            <div class="lv-details">
+              <p><b>Langtext</b> Photovoltaikmodule auf der geneigten Dachfläche ausrichten und an der vorgesehenen Unterkonstruktion befestigen.</p>
+              <p><b>Modellmenge</b> Acht Modulpositionen auf der Dachfläche.</p>
+            </div>
+          </details>
+        </section>
+        <p class="lv-footnote"><span>GAEB DA XML 3.3</span> Betriebe ergänzen Preise im Angebot (X84).</p>
       </div>
       <div class="quote-card feature-card" data-offer-variant="heating" data-offer-state="offersHeating" data-offer-label="Fassade, Fenster und Wärmepumpe im Modell" hidden>
-        <div class="feature-head"><div><p class="mini-kicker">Modellmengen · Beispielhaus</p><h3>Fassade, Fenster und Wärmepumpe</h3></div></div>
-        <div class="position-head"><span>Pos.</span><span>Leistung</span><span>Menge</span></div>
-        <details>
-          <summary><span>01</span><b>Fassade dämmen</b><span class="lv-amount"><strong>131,3</strong> <small>m²</small></span></summary>
-          <p>Wand- und Giebelflächen des Wohnhauses abzüglich der Öffnungen. Den Garagenanschluss separat aufmessen.</p>
-        </details>
-        <details>
-          <summary><span>02</span><b>Fenster austauschen</b><span class="lv-amount"><strong>21</strong> <small>Stk.</small></span></summary>
-          <p>Fassadenfenster im Modell gezählt. Maße und Verglasung je Fenster erfassen.</p>
-        </details>
-        <details>
-          <summary><span>03</span><b>Wärmepumpe einbauen</b><span class="lv-amount"><strong>1</strong> <small>Anlage</small></span></summary>
-          <p>Aufstellort, Leitungen und Heizungsanschluss im Angebot beschreiben.</p>
-        </details>
+        <div class="feature-head">
+          <div class="lv-meta"><p class="mini-kicker">Beispiel-LV</p><span class="lv-phase"><b>X83</b> Angebotsaufforderung</span></div>
+          <h3>Fassade, Fenster und Wärmepumpe</h3>
+        </div>
+        <div class="position-head"><span><abbr title="Ordnungszahl">OZ</abbr></span><span>Kurztext</span><span>Menge</span><span>Einheit</span></div>
+        <section class="lv-group" aria-labelledby="lv-heating-03">
+          <h4 class="lv-group-title" id="lv-heating-03"><span>03</span>Gebäudehülle</h4>
+          <details>
+            <summary><span class="lv-oz">03.0010</span><b>Fassade dämmen</b><span class="lv-amount"><strong>131,3</strong></span><span class="lv-unit">m²</span></summary>
+            <div class="lv-details">
+              <p><b>Langtext</b> Die Außenwände einschließlich der Giebel dämmen und die Anschlüsse an Sockel, Fenster und angrenzende Bauteile herstellen.</p>
+              <p><b>Modellmenge</b> Geometrische Wand- und Giebelflächen abzüglich der Öffnungen.</p>
+            </div>
+          </details>
+          <details>
+            <summary><span class="lv-oz">03.0020</span><b>Fenster austauschen</b><span class="lv-amount"><strong>21</strong></span><span class="lv-unit">St</span></summary>
+            <div class="lv-details">
+              <p><b>Langtext</b> Vorhandene Fassadenfenster ausbauen und neue Fenster in den bestehenden Öffnungen montieren. Anschlüsse an die Fassade herstellen.</p>
+              <p><b>Modellmenge</b> 21 Fassadenfenster im Gebäudemodell.</p>
+            </div>
+          </details>
+        </section>
+        <section class="lv-group" aria-labelledby="lv-heating-04">
+          <h4 class="lv-group-title" id="lv-heating-04"><span>04</span>Heizung</h4>
+          <details>
+            <summary><span class="lv-oz">04.0010</span><b>Wärmepumpe einbauen</b><span class="lv-amount"><strong>1</strong></span><span class="lv-unit">St</span></summary>
+            <div class="lv-details">
+              <p><b>Langtext</b> Die Wärmepumpe am vorgesehenen Außenstandort aufstellen und an das Heizsystem anbinden.</p>
+              <p><b>Modellmenge</b> Eine Außeneinheit am geplanten Aufstellort.</p>
+            </div>
+          </details>
+        </section>
+        <p class="lv-footnote"><span>GAEB DA XML 3.3</span> Betriebe ergänzen Preise im Angebot (X84).</p>
       </div>
       <div class="quote-card feature-card" data-offer-variant="combined" data-offer-state="offersCombined" data-offer-label="Alle Maßnahmen im Modell" hidden>
-        <div class="feature-head"><div><p class="mini-kicker">Modellmengen · Beispielhaus</p><h3>Dach, Fassade und Heizung</h3></div></div>
-        <div class="position-head"><span>Pos.</span><span>Leistung</span><span>Menge</span></div>
-        <details>
-          <summary><span>01</span><b>Dach dämmen und neu decken</b><span class="lv-amount"><strong>78,7</strong> <small>m²</small></span></summary>
-          <p>Bruttofläche beider Dachseiten mit Dachüberstand. Traufen und Ortgänge ergeben 35,6 m.</p>
-        </details>
-        <details>
-          <summary><span>02</span><b>Photovoltaik montieren</b><span class="lv-amount"><strong>8</strong> <small>Module</small></span></summary>
-          <p>Solarmodule im Modell gezählt. Unterkonstruktion, Wechselrichter und Anschluss ergänzen die Position.</p>
-        </details>
-        <details>
-          <summary><span>03</span><b>Fassade dämmen</b><span class="lv-amount"><strong>131,3</strong> <small>m²</small></span></summary>
-          <p>Wand- und Giebelflächen des Wohnhauses abzüglich der Öffnungen. Den Garagenanschluss separat aufmessen.</p>
-        </details>
-        <details>
-          <summary><span>04</span><b>Fenster austauschen</b><span class="lv-amount"><strong>21</strong> <small>Stk.</small></span></summary>
-          <p>Fassadenfenster im Modell gezählt. Maße und Verglasung je Fenster erfassen.</p>
-        </details>
-        <details>
-          <summary><span>05</span><b>Wärmepumpe einbauen</b><span class="lv-amount"><strong>1</strong> <small>Anlage</small></span></summary>
-          <p>Aufstellort, Leitungen und Heizungsanschluss im Angebot beschreiben.</p>
-        </details>
+        <div class="feature-head">
+          <div class="lv-meta"><p class="mini-kicker">Beispiel-LV</p><span class="lv-phase"><b>X83</b> Angebotsaufforderung</span></div>
+          <h3>Dach, Fassade und Heizung</h3>
+        </div>
+        <div class="position-head"><span><abbr title="Ordnungszahl">OZ</abbr></span><span>Kurztext</span><span>Menge</span><span>Einheit</span></div>
+        <section class="lv-group" aria-labelledby="lv-combined-01">
+          <h4 class="lv-group-title" id="lv-combined-01"><span>01</span>Dacharbeiten</h4>
+          <details>
+            <summary><span class="lv-oz">01.0010</span><b>Dach dämmen und decken</b><span class="lv-amount"><strong>78,7</strong></span><span class="lv-unit">m²</span></summary>
+            <div class="lv-details">
+              <p><b>Langtext</b> Beide geneigten Dachflächen des Wohnhauses dämmen und neu eindecken.</p>
+              <p><b>Modellmenge</b> Bruttofläche beider Dachseiten einschließlich Überständen.</p>
+            </div>
+          </details>
+          <details>
+            <summary><span class="lv-oz">01.0020</span><b>Dachanschlüsse erneuern</b><span class="lv-amount"><strong>35,6</strong></span><span class="lv-unit">m</span></summary>
+            <div class="lv-details">
+              <p><b>Langtext</b> Trauf- und Ortganganschlüsse der neuen Dachdeckung herstellen.</p>
+              <p><b>Modellmenge</b> Summe der Trauf- und Ortganglängen aus dem Dachmodell.</p>
+            </div>
+          </details>
+        </section>
+        <section class="lv-group" aria-labelledby="lv-combined-02">
+          <h4 class="lv-group-title" id="lv-combined-02"><span>02</span>Photovoltaik</h4>
+          <details>
+            <summary><span class="lv-oz">02.0010</span><b>PV-Module montieren</b><span class="lv-amount"><strong>8</strong></span><span class="lv-unit">St</span></summary>
+            <div class="lv-details">
+              <p><b>Langtext</b> Photovoltaikmodule auf der geneigten Dachfläche ausrichten und an der vorgesehenen Unterkonstruktion befestigen.</p>
+              <p><b>Modellmenge</b> Acht Modulpositionen auf der Dachfläche.</p>
+            </div>
+          </details>
+        </section>
+        <section class="lv-group" aria-labelledby="lv-combined-03">
+          <h4 class="lv-group-title" id="lv-combined-03"><span>03</span>Gebäudehülle</h4>
+          <details>
+            <summary><span class="lv-oz">03.0010</span><b>Fassade dämmen</b><span class="lv-amount"><strong>131,3</strong></span><span class="lv-unit">m²</span></summary>
+            <div class="lv-details">
+              <p><b>Langtext</b> Die Außenwände einschließlich der Giebel dämmen und die Anschlüsse an Sockel, Fenster und angrenzende Bauteile herstellen.</p>
+              <p><b>Modellmenge</b> Geometrische Wand- und Giebelflächen abzüglich der Öffnungen.</p>
+            </div>
+          </details>
+          <details>
+            <summary><span class="lv-oz">03.0020</span><b>Fenster austauschen</b><span class="lv-amount"><strong>21</strong></span><span class="lv-unit">St</span></summary>
+            <div class="lv-details">
+              <p><b>Langtext</b> Vorhandene Fassadenfenster ausbauen und neue Fenster in den bestehenden Öffnungen montieren. Anschlüsse an die Fassade herstellen.</p>
+              <p><b>Modellmenge</b> 21 Fassadenfenster im Gebäudemodell.</p>
+            </div>
+          </details>
+        </section>
+        <section class="lv-group" aria-labelledby="lv-combined-04">
+          <h4 class="lv-group-title" id="lv-combined-04"><span>04</span>Heizung</h4>
+          <details>
+            <summary><span class="lv-oz">04.0010</span><b>Wärmepumpe einbauen</b><span class="lv-amount"><strong>1</strong></span><span class="lv-unit">St</span></summary>
+            <div class="lv-details">
+              <p><b>Langtext</b> Die Wärmepumpe am vorgesehenen Außenstandort aufstellen und an das Heizsystem anbinden.</p>
+              <p><b>Modellmenge</b> Eine Außeneinheit am geplanten Aufstellort.</p>
+            </div>
+          </details>
+        </section>
+        <p class="lv-footnote"><span>GAEB DA XML 3.3</span> Betriebe ergänzen Preise im Angebot (X84).</p>
       </div>
     </div>
   </div>
