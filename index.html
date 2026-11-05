@@ -608,7 +608,7 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
 }
 .compare-before{clip-path:inset(0 calc(100% - var(--comparison-split)) 0 0)}
 .compare-after,.compare-outgoing,.compare-live{clip-path:inset(0 0 0 var(--comparison-split))}
-.compare-live{position:absolute;inset:0;visibility:hidden;pointer-events:none}
+.compare-live{position:absolute;inset:calc(-100% * 40 / 617) 0 0;visibility:hidden;pointer-events:none}
 .compare-live[data-ready]{visibility:visible}
 .model-frame .compare-live .house3d-host{pointer-events:none}
 .compare-live[data-awaiting] ~ .compare-before{clip-path:none}
@@ -637,6 +637,7 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
 .compare-legend span,.compare-legend strong{display:block}
 .compare-legend span{margin-bottom:4px;color:#396c5c;font-size:11px;font-weight:750;letter-spacing:.055em;text-transform:uppercase}
 .compare-legend strong{font-size:14px;font-weight:675}
+.compare-legend #compare-work{color:var(--green);font-weight:745}
 .compare-hint{position:absolute;bottom:3.5%;left:4%;color:#4f615e;font-size:12px}
 @media(max-width:800px){
  .compare-legend{top:2%;left:2%;right:2%}
@@ -650,6 +651,7 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
  .on-scenario .compare-view{width:min(100%,calc((100cqh - 12px) * 853 / 617));transform:translateY(4px)}
  .compare-legend span{margin:0;padding:3px 4px;background:#f8faf7dc}
  .compare-legend strong,.compare-hint{display:none}
+ .compare-legend #compare-work{display:block;font-size:10px}
  .compare-handle{width:36px;height:36px}
  .compare-handle .icon{width:17px;height:17px}
 }
@@ -1586,7 +1588,7 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
     <div class="cover-comparison" id="cover-comparison" hidden>
       <div class="compare-legend" aria-hidden="true">
         <div><span>Vorher</span><strong>Unsanierter Bestand</strong></div>
-        <div><span id="compare-result-label">Nachher</span><strong id="compare-result-detail">Modernisiertes Haus</strong></div>
+        <div><span id="compare-result-label">Nachher</span><strong id="compare-result-detail">Modernisiertes Haus</strong><strong id="compare-work" hidden></strong></div>
       </div>
       <div class="compare-view" id="compare-view">
         <div id="compare-live" class="compare-live" hidden inert aria-hidden="true"></div>
@@ -1845,8 +1847,9 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
     heat: [.79, .97, 1.11, 2.0],
     roof: [.85, .64, 1.045, 3.38],
     heating: [.51, .36, 1.075, 3.10],
+    compareRoof: [.73, .50, 1.045, 3.28],
     compareHeating: comparisonPose,
-    compareCombined: comparisonPose,
+    compareCombined: [.66, .41, 1.06, 3.12],
     offers: [.34, .50, 1.04, 3.10],
     offersHeating: [.34, .50, 1.04, 3.10],
     offersCombined: [.49, .48, 1.04, 3.10],
@@ -2523,7 +2526,7 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
       scopeWall:fadeGroup(offerWall,{clipped:true}), scopeWindows:fadeGroup(offerWindows,{clipped:true}),
       scopePump:fadeGroup(offerPump), scopePv:fadeGroup(offerPv,{clipped:true}),
     };
-    function exchange({before,after}){
+    function exchange({before,after},{out=.19,into=.22}={}){
       const hideOld=fadeGroup(before,{writeDepth:true,clipped:true});
       const showNew=fadeGroup(after,{writeDepth:true,clipped:true});
       const beforeOrigins=before.map(part=>part.position.z);
@@ -2532,11 +2535,11 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
         const outgoing=ease(clamp(value/.49,0,1));
         const incoming=ease(clamp((value-.46)/.54,0,1));
         hideOld(1-outgoing);showNew(incoming);
-        before.forEach((part,i)=>{part.position.z=beforeOrigins[i]+outgoing*.19});
-        after.forEach((part,i)=>{part.position.z=afterOrigins[i]+(1-incoming)*.22});
+        before.forEach((part,i)=>{part.position.z=beforeOrigins[i]+outgoing*out});
+        after.forEach((part,i)=>{part.position.z=afterOrigins[i]+(1-incoming)*into});
       };
     }
-    const exchangeWindows=exchange(renovation.windows),exchangeDoor=exchange(renovation.door);
+    const exchangeWindows=exchange(renovation.windows,{out:.36,into:.69}),exchangeDoor=exchange(renovation.door);
     const pvY=renovation.pv.position.y;
     const bindFinish=pairs=>pairs.map(([material,end])=>({
       material:exterior.get(material)||material,start:material.color.clone(),end:new T.Color(end),
@@ -2544,38 +2547,49 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
     const roofFinishes=bindFinish(renovation.roofColors), wallFinishes=bindFinish(renovation.wallColors);
     const roofPlan={roofFinish:1,pv:1}, heatingPlan={wallFinish:1,windows:1,pump:1};
     const fullRenovation={...roofPlan,...heatingPlan,finish:1};
+    const wallWorkTint=new T.Color('#bbd7bf');
     const looks={
       overview:{explode:1,plot:.27},introBuilt:{},plot:{plot:1},
       shell:{shell:.54,measures:1},survey:{shell:.38,plot:.24,measures:1},
       rooms:{section:1,ghost:1},heat:{section:1,ghost:.82,heat:1},
       roof:roofPlan,heating:{...heatingPlan,facade:.58},
-      compareHeating:heatingPlan,compareCombined:fullRenovation,
+      compareRoof:roofPlan,compareHeating:heatingPlan,compareCombined:fullRenovation,
       offers:{...roofPlan,roof:.76,offer:.8,scopePv:.90},
       offersHeating:{...heatingPlan,scopeWall:.78,scopeWindows:.90,scopePump:.94},
       offersCombined:{...fullRenovation,roof:.76,scopePv:.90,scopeWall:.78,scopeWindows:.90,scopePump:.94},
       done:fullRenovation,
     };
-    const heatingOrder=[['wallFinish',.21,.26],['windows',.43,.27],['pump',.68,.26]];
+    const showcaseHeating=[['wallFinish',.08,.25],['windows',.37,.24],['pump',.67,.24]];
     const orders={
       roof:[['roofFinish',.23,.32],['pv',.54,.34]],
-      heating:heatingOrder,compareHeating:heatingOrder,
-      compareCombined:[['wallFinish',.06,.31],['windows',.28,.31],['pump',.55,.37],['finish',.65,.3]],
+      heating:[['wallFinish',.21,.26],['windows',.43,.27],['pump',.68,.26]],
+      compareRoof:[['roofFinish',.10,.44],['pv',.57,.35]],
+      compareHeating:showcaseHeating,
+      compareCombined:[...showcaseHeating,['finish',.40,.22]],
+    };
+    const showcase=new Set(['compareRoof','compareHeating','compareCombined']);
+    const workCues={
+      roofFinish:['roof','Dach neu decken'],
+      pv:['scopePv','Solarmodule montieren'],
+      wallFinish:['scopeWall','Fassade dämmen'],
+      windows:['scopeWindows','Fenster einsetzen'],
+      pump:['scopePump','Wärmepumpe aufstellen'],
     };
     const values={
       section:0,explode:0,ghost:0,measures:0,plot:0,shell:0,facade:0,roof:0,heat:0,offer:0,
       pump:0,pv:0,windows:0,roofFinish:0,wallFinish:0,finish:0,
-      scopeWall:0,scopeWindows:0,scopePump:0,scopePv:0,
+      scopeWall:0,scopeWindows:0,scopePump:0,scopePv:0,roofLift:0,wallWash:0,
     };
-    const channels=Object.keys(values), shadowChannels=['section','pump','explode','pv','windows','finish'];
+    const channels=Object.keys(values), shadowChannels=['section','pump','explode','pv','windows','finish','roofLift'];
     const competing=['roofFinish','wallFinish','pv','windows','pump','finish','facade','scopeWall','scopeWindows','scopePump','scopePv'];
     const anchors=Object.fromEntries(Object.entries(looks).map(([name,look])=>[name,{...values,...look}]));
-    let from={...values},to=anchors.overview,order,initialized=false;
+    let from={...values},to=anchors.overview,order,initialized=false,work='';
     function select(name){
       from={...values};
       to=anchors[name];
       order=orders[name];
     }
-    function sample(source,target,progress,sequence){
+    function sample(source,target,progress,sequence,highlight=false){
       if(progress<=0)return source;
       if(progress>=1)return target;
       const next={},t=ease(progress);
@@ -2588,15 +2602,26 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
         for(const key of competing){
           if(target[key]===0)next[key]=mix(source[key],0,clear);
         }
+        let leadingCue=0;
         for(const [key,start,length] of sequence){
-          const local=ease(clamp((progress-start)/length,0,1));
+          const phase=(progress-start)/length;
+          const local=ease(clamp(phase,0,1));
           next[key]=mix(source[key],target[key],local);
+          const cue=highlight&&target[key]>source[key]&&workCues[key];
+          if(!cue)continue;
+          const [mark,label]=cue;
+          const strength=ease(clamp((phase+.18)/.26,0,1))*(1-ease(clamp((phase-.71)/.46,0,1)));
+          next[mark]=Math.max(next[mark],strength);
+          if(strength>leadingCue){leadingCue=strength;next.work=label;}
+          if(key==='roofFinish')next.roofLift=.82*Math.sin(Math.PI*local);
+          if(key==='wallFinish')next.wallWash=strength;
         }
         if(target.facade>0)next.facade=mix(source.facade,target.facade,ease(clamp((progress-.21)/.26,0,1)));
       }
       return next;
     }
     function apply(next){
+      work=next.work||'';
       if(initialized&&channels.every(key=>values[key]===next[key]))return false;
       const shadowChanged=!initialized||shadowChannels.some(key=>values[key]!==next[key]);
       initialized=true;
@@ -2604,25 +2629,26 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
       const {section,pump,pv,windows,finish,roofFinish,wallFinish,explode,ghost,measures}=values;
       sectionPlane.constant=mix(9.35+riseRoof*explode,.98,section);
       arrangeLayers(explode);
+      roof.position.y+=values.roofLift;
       shell.visible=garage.visible=section<.999;
       cutaway.visible=cutGarage.visible=section>.015;
       showSection(ghost*ease(clamp((section-.25)/.6,0,1)));
       showMeasures?.(measures*(1-explode)*(1-section));
       for(const key in fades)fades[key](values[key]);
-      heater.position.y=(1-pump)*.32;
-      renovation.pv.position.y=pvY+(1-pv)*.65;
+      heater.position.y=(1-pump)*.98;
+      renovation.pv.position.y=pvY+(1-pv)*1.28;
       exchangeWindows(windows);exchangeDoor(finish);
       for(const item of roofFinishes)item.material.color.copy(item.start).lerp(item.end,roofFinish);
-      for(const item of wallFinishes)item.material.color.copy(item.start).lerp(item.end,wallFinish);
+      for(const item of wallFinishes)item.material.color.copy(item.start).lerp(item.end,wallFinish).lerp(wallWorkTint,values.wallWash*.53);
       return shadowChanged;
     }
     function blend(progress){return apply(sample(from,to,progress,order))}
     function seek(source,target,progress){
       // A scroll position is absolute, independent of earlier timeline movement.
-      return apply(source===target?anchors[source]:sample(anchors[source],anchors[target],progress,orders[target]));
+      return apply(source===target?anchors[source]:sample(anchors[source],anchors[target],progress,orders[target],showcase.has(target)));
     }
     blend(1);
-    return {select,blend,seek,get section(){return values.section},get explode(){return values.explode}};
+    return {select,blend,seek,get work(){return work},get section(){return values.section},get explode(){return values.explode}};
   }
 
   function mountNexuraHouse(canvasOrHost, options={}) {
@@ -2640,7 +2666,7 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
     let renderer,scene,camera,model,sun,observer,raf=0,active=true,destroyed=false,available=false;
     let state=Object.hasOwn(cameras,options.state)?options.state:'overview';
     let pose=[...cameras[state]],cameraMotion=null,modelMotion=null;
-    let scrub=null, scrubPending=false, comparisonView=false, comparisonFramePending=false;
+    let scrub=null, scrubPending=false, comparisonView=false, comparisonFramePending=false, lastWork='';
     const pointers=new Map(), off=[];
     const on=(target,name,listener,opt)=>{target.addEventListener(name,listener,opt);off.push(()=>target.removeEventListener(name,listener,opt))};
     const signal=(name,detail={})=>host.dispatchEvent(new CustomEvent('nexura-house-'+name,{detail}));
@@ -2670,14 +2696,15 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
       const view=Math.max(mix(mix(12.7,17.65,section),17.15,model.explode),mix(18.35,19.55,section)/aspect)/zoom;
       const half=view/2;
       camera.left=-half*aspect;camera.right=half*aspect;camera.top=half;camera.bottom=-half;
-      // Match the 853 × 617 crop used for both static comparison images.
-      if(comparisonView)camera.setViewOffset(853,799,0,111,853,617);
+      // Keep the static crop aligned and render 40 extra pixels above it for the lifted roof.
+      if(comparisonView)camera.setViewOffset(853,799,0,71,853,657);
       else if(camera.view?.enabled)camera.clearViewOffset();
       else camera.updateProjectionMatrix();
       const radius=26, flat=radius*Math.cos(elevation);
       camera.position.set(Math.sin(az)*flat,y+Math.sin(elevation)*radius,Math.cos(az)*flat);
       camera.lookAt(0,y,0);
       renderer.render(scene,camera);
+      if(model.work!==lastWork){lastWork=model.work;signal('work-change',{label:lastWork});}
       if(comparisonFramePending){comparisonFramePending=false;signal('comparison-frame');}
       if(cameraMotion||modelMotion)schedule();
     }
@@ -2904,7 +2931,8 @@ const comparison=$('#cover-comparison'), compareView=$('#compare-view'), compare
 const compareAfter=$('.compare-after',comparison), coverAfter=compareAfter.getAttribute('src');
 const compareLive=$('#compare-live'), houseHostHome=houseHost.parentElement;
 const comparisonVariants=JSON.parse($('#nexura-compare-options').textContent);
-const compareLabel=$('#compare-result-label'), compareDetail=$('#compare-result-detail'), compareHint=$('.compare-hint',comparison);
+const compareLabel=$('#compare-result-label'), compareDetail=$('#compare-result-detail');
+const compareHint=$('.compare-hint',comparison), compareWork=$('#compare-work');
 const labels=nodes.map(node=>$('.chain-label',node)?.textContent||$('a',node)?.getAttribute('aria-label')||'');
 const offerCards=$$('[data-offer-variant]',slides[4]);
 const canMove=()=>!reduced.matches&&!document.hidden&&!!Element.prototype.animate;
@@ -2916,7 +2944,8 @@ const planningSplit=40;
 let coverSplit=50, scenarioSplit=planningSplit, coverSweep=0, coverSweepPlayed=false, fadingComparison;
 const housePosters=JSON.parse($('#nexura-house-posters').textContent), posterImage=$('.model-poster img');
 function syncPoster(state){
-  const src=housePosters[state]||housePosters.overview;
+  const posterState={compareRoof:'roof',compareCombined:'done'}[state]||state;
+  const src=housePosters[posterState]||housePosters.overview;
   if(posterImage&&src&&posterImage.getAttribute('src')!==src)posterImage.src=src;
 }
 const coverComparisonActive=()=>current===0&&!coverAssembly;
@@ -2954,6 +2983,8 @@ function syncComparison(animate){
   }
   if(!planning||live)fadingComparison?.remove();
   if(!active)return;
+  compareWork.hidden=true;
+  compareDetail.hidden=false;
   const image=planning?(comparisonVariants[scenarioView]||coverAfter):coverAfter;
   if(compareAfter.getAttribute('src')!==image){
     fadingComparison?.remove();
@@ -3034,10 +3065,12 @@ for(const event of ['pointercancel','lostpointercapture']){
   compareView.addEventListener(event,()=>{comparePointer=null;});
 }
 function labelModelControl(){
-  const label=current!==0?'3D-Ansicht zurücksetzen':coverAssembly?'Zum Vorher-nachher-Vergleich':'Hausaufbau zeigen';
+  const replay=current===5&&!reduced.matches;
+  const label=replay?'Umbau erneut abspielen':current!==0?'3D-Ansicht zurücksetzen':
+    coverAssembly?'Zum Vorher-nachher-Vergleich':'Hausaufbau zeigen';
   resetHouse.setAttribute('aria-label',label);
   resetHouse.title=label;
-  $('use',resetHouse).setAttribute('href',current!==0?'#i-view-reset':coverAssembly?'#i-compare':'#i-replay');
+  $('use',resetHouse).setAttribute('href',replay?'#i-replay':current!==0?'#i-view-reset':coverAssembly?'#i-compare':'#i-replay');
 }
 function toggleCoverAssembly(){
   if(current!==0||!frame.classList.contains('has-3d'))return;
@@ -3400,11 +3433,12 @@ reduced.addEventListener?.('change',()=>{
     updateHouse({visual:false});
     if(liveScenario())startModelScene({animate:false});
   }
+  if(current===5)labelModelControl();
   if(!reduced.matches)return;
   copyEffect?.cancel();copyEffect=null;
   stopProcessFlight();
   pauseModelScene();
-  if(current===1&&showingResult)seekModelScene(1);
+  if((current===1&&showingResult)||current===5)seekModelScene(1);
   if(current===0)stopCoverSweep({center:true});
 });
 document.addEventListener('visibilitychange',()=>{
@@ -3544,6 +3578,7 @@ $('#address-back').onclick=()=>{
 };
 // Scene time is local to the active slide and independent of slide navigation.
 const timeline=(start,end,duration)=>({duration,stages:[{state:start,at:0},{state:end,at:1}]});
+const fullRenovation={duration:6450,stages:[{state:'introBuilt',at:0},{state:'compareRoof',at:.44},{state:'compareCombined',at:1}]};
 const sceneTimelines={
   assembly:timeline('overview','introBuilt',1250),
   survey:{duration:5800,stages:[{state:'shell',at:0},{state:'survey',at:.15},{state:'survey',at:1}]},
@@ -3552,20 +3587,16 @@ const sceneTimelines={
   rooms:timeline('shell','rooms',970),
   heat:{duration:1400,stages:[{state:'shell',at:0},{state:'rooms',at:.68},{state:'heat',at:1}]},
   variants:{
-    roof:timeline('introBuilt','roof',2200),
-    heating:timeline('introBuilt','compareHeating',2400),
-    combined:{duration:3250,stages:[{state:'introBuilt',at:0},{state:'roof',at:.43},{state:'compareCombined',at:1}]},
+    roof:timeline('introBuilt','compareRoof',3020),
+    heating:timeline('introBuilt','compareHeating',3950),
+    combined:fullRenovation,
   },
   offers:{
     roof:timeline('roof','offers',920),
     heating:timeline('heating','offersHeating',920),
     combined:timeline('done','offersCombined',920),
   },
-  done:{
-    roof:timeline('offers','done',1170),
-    heating:timeline('offersHeating','done',1170),
-    combined:timeline('offersCombined','done',1170),
-  },
+  done:fullRenovation,
 };
 let modelScenePosition=1, modelSceneRaf=0;
 function modelTimeline(){
@@ -3574,7 +3605,7 @@ function modelTimeline(){
   if(current===2)return sceneTimelines[planView];
   if(liveScenario())return sceneTimelines.variants[scenarioView];
   if(current===4)return sceneTimelines.offers[scenarioView];
-  if(current===5)return sceneTimelines.done[scenarioView];
+  if(current===5)return sceneTimelines.done;
 }
 function setSceneMarker(progress){
   frame.dataset.sceneProgress=progress.toFixed(4);
@@ -3597,6 +3628,10 @@ function seekModelScene(progress,sequence=modelTimeline()){
   modelScenePosition=clamp(progress,0,1);
   setSceneMarker(modelScenePosition);
   if(current===1&&showingResult)renderUploads(modelScenePosition);
+  if(current===5&&(modelScenePosition===0||modelScenePosition===1||!frame.classList.contains('has-3d'))){
+    const label=modelScenePosition===1?'Zielbild nach der Sanierung':'Sanierung im Zeitraffer';
+    if(modelStatus.textContent!==label)modelStatus.textContent=label;
+  }
   if(current===0){
     const open=modelScenePosition<1;
     frame.dataset.modelState=open?'overview':'introBuilt';
@@ -3616,10 +3651,14 @@ function startModelScene({animate=true,from=0}={}){
   if(!animate||reduced.matches||document.hidden||from>=1){
     seekModelScene(1,sequence);return;
   }
-  const started=performance.now();
+  let elapsed=0,lastFrame=performance.now();
+  const maxFrame=(liveScenario()||current===5)?120:Infinity;
   seekModelScene(from,sequence);
   const tick=now=>{
-    const time=from+Math.max(0,now-started)/sequence.duration;
+    // A slow first WebGL frame should not skip the first installation step.
+    elapsed+=clamp(now-lastFrame,0,maxFrame);
+    lastFrame=now;
+    const time=from+elapsed/sequence.duration;
     seekModelScene(time,sequence);
     if(time<1)modelSceneRaf=requestAnimationFrame(tick);
     else modelSceneRaf=0;
@@ -3931,6 +3970,7 @@ if(window.mountNexuraHouse){
         if(liveScenario())startModelScene();
         return;
       }
+      if(ok&&current===5&&modelScenePosition===1&&canMove())startModelScene();
       if(!ok){
         if(coverAssembly){
           pauseModelScene();coverAssembly=false;
@@ -3940,6 +3980,15 @@ if(window.mountNexuraHouse){
         else updateHouse({immediate:true});
       }
     };
+    houseHost.addEventListener('nexura-house-work-change',({detail:{label}})=>{
+      if(liveScenario()){
+        compareWork.textContent=label;
+        compareWork.hidden=!label;
+        compareDetail.hidden=!!label;
+      }else if(current===5){
+        modelStatus.textContent=label||(modelScenePosition<1?'Sanierung im Zeitraffer':'Zielbild nach der Sanierung');
+      }
+    });
     houseHost.addEventListener('nexura-house-comparison-frame',()=>{
       if(liveScenario()){
         compareLive.removeAttribute('data-awaiting');
@@ -3954,7 +4003,9 @@ if(window.mountNexuraHouse){
     else updateHouse({immediate:true});
     Promise.resolve(houseViewer.ready).then(show3d).catch(()=>show3d(false));
     resetHouse.addEventListener('click',()=>{
-      if(current===0)toggleCoverAssembly();else houseViewer.reset();
+      if(current===0)toggleCoverAssembly();
+      else if(current===5&&!reduced.matches)startModelScene();
+      else houseViewer.reset();
     });
   }catch{}
 }
