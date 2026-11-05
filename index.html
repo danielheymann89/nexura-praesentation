@@ -379,6 +379,25 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
 .statuses dd{font-size:12px}
 .address-back{margin-top:5px;font-size:13px}
 
+/* A relative range communicates the calculation target without a sample price. */
+.price-target{max-width:490px;margin-top:16px;padding:12px 14px 10px;border:1px solid var(--line);background:var(--paper)}
+.price-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.price-head .mini-kicker{margin-bottom:2px;font-size:11px}
+.price-head h3{font-size:clamp(18px,1.6vw,24px);font-weight:730;line-height:1.12;letter-spacing:-.025em}
+.price-head strong{color:var(--green);font-size:clamp(27px,3vw,42px);font-weight:760;line-height:1;letter-spacing:-.045em;white-space:nowrap}
+.price-range{margin-top:11px}
+.price-track{height:5px;margin:4px 2px 0;display:flex;justify-content:space-between;align-items:center;background:#c1dbcd}
+.price-track i{width:2px;height:9px;background:#588575}
+.price-track i:nth-child(2){width:9px;height:9px;border-radius:50%;background:var(--green)}
+.price-labels{display:grid;grid-template-columns:1fr auto 1fr;gap:4px;margin-top:5px;color:var(--muted);font-size:11px;line-height:1.2}
+.price-labels span:first-child,.price-labels span:last-child{color:var(--green);font:650 11px/1.2 var(--mono)}
+.price-labels span:last-child{text-align:right}
+.price-note{margin-top:9px;color:var(--muted);font-size:12px;line-height:1.3}
+#modul-05 .archive-card{margin-top:13px;padding-top:9px}
+#modul-05 .archive-card .mini-kicker{margin-bottom:3px}
+#modul-05 .archive-card .feature-head{margin-bottom:4px}
+#modul-05 .archive-list summary{padding-block:6px}
+
 .model-layout{position:absolute;inset:0;z-index:1;display:grid;grid-template-columns:var(--stage-columns);gap:var(--stage-gap);align-items:center;pointer-events:none}
 .model-frame{position:relative;isolation:isolate;grid-column:2;min-width:0;width:100%;height:min(calc(100% - 24px),clamp(300px,71dvh,680px));pointer-events:auto}
 .model-ground,.model-poster,.house3d-host{position:absolute;inset:0}
@@ -409,6 +428,10 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
  .address-form+.segmented{margin-top:8px}
  .on-plan{--model-height:clamp(114px,calc(100dvh - 627px),332px)}
  .on-scenario{--model-height:clamp(150px,calc(100dvh - 560px),365px)}
+ html:has(#modul-05.is-current){--model-height:clamp(135px,calc(100dvh - 627px),345px)}
+ .price-target{margin-top:12px;padding:9px 11px}
+ #modul-05 .archive-card{margin-top:11px}
+ #modul-05 .archive-list summary{font-size:13px}
  .plan-views{margin-top:9px}
  .slide-copy>.scenario{margin-top:12px}
  .floorplan{margin-top:10px;padding:7px 8px 8px}
@@ -430,6 +453,16 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
  :root{--model-height:clamp(150px,32dvh,245px)}
  .on-plan{--model-height:clamp(94px,17dvh,128px)}
  .on-scenario{--model-height:clamp(115px,22dvh,160px)}
+ html:has(#modul-05.is-current){--model-height:clamp(105px,18dvh,137px)}
+ #modul-05 .slide-copy>h2{min-height:0;font-size:clamp(26px,7.8vw,36px)}
+ #modul-05 h2 br{display:none}
+ #modul-05 .intro{margin-top:6px;font-size:14px;line-height:1.35}
+ .price-target{margin-top:8px;padding:7px 9px}
+ .price-range{margin-top:8px}
+ .price-note{margin-top:6px;font-size:11px}
+ #modul-05 .archive-card{margin-top:8px;padding-top:6px}
+ #modul-05 .archive-card h3{font-size:17px}
+ #modul-05 .archive-list summary{padding-block:4px}
  :is(#modul-02,#modul-03) .slide-copy>h2{font-size:clamp(26px,7.8vw,36px);min-height:0}
  :is(#modul-02,#modul-03) :is(h2 br,.intro),.scenario-measures{display:none}
  :is(#modul-02,#modul-03) .slide-grid{padding-bottom:8px}
@@ -1658,12 +1691,23 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
   <div class="slide-grid wrap">
     <div class="slide-copy">
       <p class="chapter-kicker">05 / Ausführen &amp; betreiben</p>
-      <h2 id="title-05">Das<br>Zielbild.</h2>
-      <p class="intro">So könnte das Haus nach der Sanierung aussehen. Bau, Abnahme und Wartung halten Sie in der Gebäudeakte fest.</p>
+      <h2 id="title-05">Das<br> Zielbild.</h2>
+      <p class="intro">Aus Gebäudemodell, LV-Mengen und Referenzpreisen kalkulieren wir die Preisspanne.</p>
+      <section class="price-target" aria-labelledby="price-title">
+        <div class="price-head">
+          <div><p class="mini-kicker">Kalkulationsziel</p><h3 id="price-title">Preisspanne</h3></div>
+          <strong>±10 %</strong>
+        </div>
+        <div class="price-range" role="img" aria-label="Zielspanne von 10 Prozent unter bis 10 Prozent über der Kostenschätzung">
+          <div class="price-track" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="price-labels" aria-hidden="true"><span>−10 %</span><span>Kostenschätzung</span><span>+10 %</span></div>
+        </div>
+        <p class="price-note">Vergleichbare Angebote sollen höchstens 10 % von der Kalkulation abweichen.</p>
+      </section>
       <div class="archive-card feature-card">
         <div class="feature-head"><div><p class="mini-kicker">Lindenweg</p><h3>Projektakte</h3></div></div>
         <div class="archive-list">
-          <details open><summary><span class="archive-num">01</span><b>Ausführung und Änderungen</b><svg class="icon"><use href="#i-plus"/></svg></summary><p>Geänderter Dachanschluss mit Foto und Zeichnung.</p></details>
+          <details><summary><span class="archive-num">01</span><b>Ausführung und Änderungen</b><svg class="icon"><use href="#i-plus"/></svg></summary><p>Geänderter Dachanschluss mit Foto und Zeichnung.</p></details>
           <details><summary><span class="archive-num">02</span><b>Abnahme und Nachweise</b><svg class="icon"><use href="#i-plus"/></svg></summary><p>Protokoll, offene Punkte, Rechnungen und Nachweise.</p></details>
           <details><summary><span class="archive-num">03</span><b>Betrieb und Wartung</b><svg class="icon"><use href="#i-plus"/></svg></summary><p>Wartungshinweise und aktuelle Gebäudedaten.</p></details>
         </div>
