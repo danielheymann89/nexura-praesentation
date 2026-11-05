@@ -387,6 +387,12 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
 [data-price-settled] .price-target{background:#f4f8f3;border-color:#a5c5b5;box-shadow:0 0 0 3px #e6eee7}
 .price-head .mini-kicker{margin-bottom:2px;font-size:11px}
 .price-head h3{font-size:clamp(18px,1.6vw,24px);font-weight:730;line-height:1.12;letter-spacing:-.025em}
+.budget-standard{display:inline-block;white-space:nowrap}
+.budget-grade{
+ display:inline-grid;place-items:center;width:29px;height:21px;padding-right:4px;margin-left:3px;vertical-align:middle;
+ clip-path:polygon(0 0,72% 0,100% 50%,72% 100%,0 100%);
+ background:#008743;color:#fff;font-size:12px;font-weight:800;line-height:1;letter-spacing:0;
+}
 .budget-values{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:10px}
 .budget-values dt{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:11px;line-height:1.2}
 .budget-values dd{margin:3px 0 0;color:var(--ink);font-size:clamp(14px,1.45vw,20px);font-weight:710;line-height:1.15;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -1764,7 +1770,7 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
       <section class="price-target" aria-labelledby="price-title" data-cost-low="90000" data-cost-high="110000" data-budget-status="within">
         <div class="price-head">
           <p class="mini-kicker">Beispielrechnung</p>
-          <h3 id="price-title">Budgetcheck</h3>
+          <h3 id="price-title">Budgetcheck für <span class="budget-standard">Effizienzhaus 40 <span class="budget-grade" role="img" aria-label="Klasse A im Beispiel">A</span></span></h3>
         </div>
         <dl class="budget-values">
           <div>
