@@ -388,11 +388,12 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
 .price-head .mini-kicker{margin-bottom:2px;font-size:11px}
 .price-head h3{font-size:clamp(18px,1.6vw,24px);font-weight:730;line-height:1.12;letter-spacing:-.025em}
 .budget-standard{display:inline-block;white-space:nowrap}
-.budget-grade{
+.grade-flag{
  display:inline-grid;place-items:center;width:29px;height:21px;padding-right:4px;margin-left:3px;vertical-align:middle;
  clip-path:polygon(0 0,72% 0,100% 50%,72% 100%,0 100%);
- background:#008743;color:#fff;font-size:12px;font-weight:800;line-height:1;letter-spacing:0;
+ font-size:12px;font-weight:800;line-height:1;letter-spacing:0;
 }
+.budget-grade{background:#008743;color:#fff}
 .budget-values{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:10px}
 .budget-values dt{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:11px;line-height:1.2}
 .budget-values dd{margin:3px 0 0;color:var(--ink);font-size:clamp(14px,1.45vw,20px);font-weight:710;line-height:1.15;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -1080,6 +1081,8 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
  fill:none;stroke:#087154;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;
  stroke-dasharray:15;stroke-dashoffset:var(--success-line,15);
 }
+.upload-efficiency{display:flex;align-items:center;gap:8px;margin-top:9px;color:var(--ink);font-size:14px;font-weight:680}
+.upload-grade{margin-left:0;background:#f47321;color:var(--ink)}
 .upload-note,.upload-local{margin-top:5px;color:var(--muted);font-size:11px;line-height:1.25}
 .upload-local{font-weight:650;color:var(--green);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:800px){
@@ -1108,6 +1111,17 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
  .upload-note,.upload-local{margin-top:4px;font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){.upload-drop{transition:none}}
+
+@media(max-width:355px) and (max-height:700px) and (orientation:portrait){
+ #erster-stand{padding-top:8px}
+ #erster-stand .statuses{margin-top:5px}
+ #erster-stand .statuses>div{padding-block:1px}
+ #erster-stand .address-back{padding-block:2px}
+ .upload-stage{min-height:75px}
+ .upload-docs{padding-block:4px}
+ .upload-meter{padding-block:4px 3px}
+ .upload-efficiency{margin-top:4px;font-size:13px}
+}
 
 /*
   taste-skill motion.css - the micro-interactions a company site has (figma.com, x.ai): one small
@@ -1525,6 +1539,7 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
           <label class="upload-hitbox" for="upload-input"></label>
           <input class="sr-only" id="upload-input" type="file" multiple accept="application/pdf,image/*,.pdf" aria-label="Eigene PDF-Dateien oder Fotos auswählen" aria-describedby="file-note">
         </div>
+        <p class="upload-efficiency" id="upload-efficiency" hidden>Effizienzklasse heute <span class="grade-flag upload-grade">F</span></p>
         <p class="upload-note" id="file-note" role="status">Beispiel-Upload · Eigene Dateien bleiben lokal.</p>
         <p class="upload-local" id="upload-local" role="status" hidden></p>
       </section>
@@ -1839,7 +1854,7 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
       <section class="price-target" aria-labelledby="price-title" data-cost-low="90000" data-cost-high="110000" data-budget-status="within">
         <div class="price-head">
           <p class="mini-kicker">Beispielrechnung</p>
-          <h3 id="price-title">Budgetcheck für <span class="budget-standard">Effizienzhaus 40 <span class="budget-grade" role="img" aria-label="Klasse A im Beispiel">A</span></span></h3>
+          <h3 id="price-title">Budgetcheck für <span class="budget-standard">Effizienzhaus 40 <span class="grade-flag budget-grade" role="img" aria-label="Klasse A im Beispiel">A</span></span></h3>
         </div>
         <dl class="budget-values">
           <div>
@@ -4428,6 +4443,7 @@ const uploadDrop=$('#upload-drop'), uploadInput=$('#upload-input'), uploadNote=$
 const uploadDocs=$$('.upload-doc',uploadDrop), uploadProgress=$('#upload-progress'), uploadPercent=$('#upload-percent');
 const uploadCount=$('#file-count'), uploadStatus=$('#upload-status'), uploadLocal=$('#upload-local');
 const documentsStatus=$('#documents-status'), documentsDot=$('#documents-dot');
+const uploadEfficiency=$('#upload-efficiency');
 const localUploadNote=uploadNote.textContent;
 const localNames=new Map();
 function renderUploads(position){
@@ -4445,6 +4461,7 @@ function renderUploads(position){
   if(uploadDrop.dataset.uploadPhase!==phase){
     uploadDrop.dataset.uploadPhase=phase;
     const ready=phase==='done';
+    uploadEfficiency.hidden=!ready;
     documentsStatus.textContent=ready?'Vorhanden':'Fehlen noch';
     documentsDot.classList.toggle('ok',ready);
     documentsDot.classList.toggle('open',!ready);
