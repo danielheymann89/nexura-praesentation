@@ -1081,8 +1081,13 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
  fill:none;stroke:#087154;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;
  stroke-dasharray:15;stroke-dashoffset:var(--success-line,15);
 }
-.upload-efficiency{display:flex;align-items:center;gap:8px;margin-top:9px;color:var(--ink);font-size:14px;font-weight:680}
-.upload-grade{margin-left:0;background:#f47321;color:var(--ink)}
+.upload-efficiency{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ margin-top:18px;padding:10px 13px;border:1px solid #b4cbbf;background:#eef4ee;color:var(--ink);
+}
+.upload-efficiency-label{margin-bottom:3px;color:var(--green);font-size:11px;font-weight:700;line-height:1.2}
+.upload-efficiency-title{font-size:clamp(18px,1.7vw,24px);font-weight:750;line-height:1.17;letter-spacing:-.025em}
+.upload-grade{flex:none;width:40px;height:30px;margin-left:0;background:#f47321;color:var(--ink);font-size:17px}
 .upload-note,.upload-local{margin-top:5px;color:var(--muted);font-size:11px;line-height:1.25}
 .upload-local{font-weight:650;color:var(--green);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:800px){
@@ -1091,6 +1096,8 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
  .upload-stage{min-height:108px}
  .upload-docs{padding:6px 7px;gap:4px}
  .upload-sheet{width:53px;height:53px}
+ .upload-efficiency{margin-top:14px;padding:8px 11px}
+ .upload-grade{width:36px;height:27px;font-size:16px}
 }
 @media(max-width:800px) and (max-height:700px){
  html:has(#modul-01.is-current #erster-stand:not([hidden])){--model-height:clamp(97px,17dvh,128px)}
@@ -1113,14 +1120,21 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
 @media(prefers-reduced-motion:reduce){.upload-drop{transition:none}}
 
 @media(max-width:355px) and (max-height:700px) and (orientation:portrait){
- #erster-stand{padding-top:8px}
- #erster-stand .statuses{margin-top:5px}
- #erster-stand .statuses>div{padding-block:1px}
- #erster-stand .address-back{padding-block:2px}
- .upload-stage{min-height:75px}
- .upload-docs{padding-block:4px}
- .upload-meter{padding-block:4px 3px}
- .upload-efficiency{margin-top:4px;font-size:13px}
+ #erster-stand{padding-top:6px}
+ #erster-stand .chapter-kicker{margin-bottom:4px}
+ #erster-stand .statuses{margin-top:4px}
+ #erster-stand .statuses>div{padding-block:0}
+ #erster-stand .address-back{margin-top:0;padding-block:0}
+ .upload-panel{margin-top:2px}
+ .upload-head{margin-bottom:3px}
+ .upload-stage{min-height:70px}
+ .upload-docs{padding-block:3px}
+ .upload-meter{padding-block:3px 2px}
+ .upload-efficiency{margin-top:9px;padding:4px 7px;gap:8px}
+ .upload-efficiency-copy{display:flex;align-items:baseline;gap:7px}
+ .upload-efficiency-label{margin:0;font-size:10px}
+ .upload-efficiency-title{font-size:16px}
+ .upload-grade{width:33px;height:25px;font-size:15px}
 }
 
 /*
@@ -1539,7 +1553,13 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
           <label class="upload-hitbox" for="upload-input"></label>
           <input class="sr-only" id="upload-input" type="file" multiple accept="application/pdf,image/*,.pdf" aria-label="Eigene PDF-Dateien oder Fotos auswählen" aria-describedby="file-note">
         </div>
-        <p class="upload-efficiency" id="upload-efficiency" hidden>Effizienzklasse heute <span class="grade-flag upload-grade">F</span></p>
+        <div class="upload-efficiency" id="upload-efficiency" hidden>
+          <div class="upload-efficiency-copy">
+            <p class="upload-efficiency-label">Ergebnis</p>
+            <p class="upload-efficiency-title">Effizienzklasse heute</p>
+          </div>
+          <span class="grade-flag upload-grade">F</span>
+        </div>
         <p class="upload-note" id="file-note" role="status">Beispiel-Upload · Eigene Dateien bleiben lokal.</p>
         <p class="upload-local" id="upload-local" role="status" hidden></p>
       </section>
