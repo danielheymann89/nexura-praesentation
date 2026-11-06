@@ -1084,6 +1084,8 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
 .upload-efficiency{
  display:flex;align-items:center;justify-content:space-between;gap:12px;
  margin-top:18px;padding:10px 13px;border:1px solid #b4cbbf;background:#eef4ee;color:var(--ink);
+ opacity:var(--result-reveal,0);
+ transform:translateY(calc(8px * (1 - var(--result-reveal,0))));
 }
 .upload-efficiency-label{margin-bottom:3px;color:var(--green);font-size:11px;font-weight:700;line-height:1.2}
 .upload-efficiency-title{font-size:clamp(18px,1.7vw,24px);font-weight:750;line-height:1.17;letter-spacing:-.025em}
@@ -1117,7 +1119,10 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
  .upload-meter{padding:6px 8px 4px}
  .upload-note,.upload-local{margin-top:4px;font-size:10px}
 }
-@media(prefers-reduced-motion:reduce){.upload-drop{transition:none}}
+@media(prefers-reduced-motion:reduce){
+ .upload-drop{transition:none}
+ .upload-efficiency{opacity:1;transform:none}
+}
 
 @media(max-width:355px) and (max-height:700px) and (orientation:portrait){
  #erster-stand{padding-top:6px}
@@ -4490,6 +4495,7 @@ function renderUploads(position){
   uploadDrop.style.setProperty('--success-in',easeRange(.89,.935));
   uploadDrop.style.setProperty('--success-scale',.58+.5*easeRange(.89,.947)-.08*easeRange(.947,1));
   uploadDrop.style.setProperty('--success-line',15*(1-easeRange(.917,.99)));
+  uploadEfficiency.style.setProperty('--result-reveal',easeRange(.89,.99));
   if(uploadProgress.value!==percent){
     uploadProgress.value=percent;
     uploadPercent.textContent=percent+' %';
