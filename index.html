@@ -398,11 +398,10 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
 .budget-values dt{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:11px;line-height:1.2}
 .budget-values dd{margin:3px 0 0;color:var(--ink);font-size:clamp(14px,1.45vw,20px);font-weight:710;line-height:1.15;font-variant-numeric:tabular-nums;white-space:nowrap}
 .budget-key-forecast{width:11px;height:7px;border-radius:2px;background:#9cc7b0}
-.budget-key-limit{width:2px;height:11px;background:#29434b}
+.budget-key-limit{width:9px;height:9px;border-radius:50%;background:#005743}
 .budget-ruler{
- --budget-thumb:18px;--budget-pin:
- radial-gradient(circle,#f8fcf8 0 3px,#29434b 3.5px 5.5px,transparent 6px) center / 100% 100% no-repeat,
- linear-gradient(#29434b,#29434b) center / 2px 100% no-repeat;
+ --budget-thumb:26px;
+ --budget-thumb-fill:#005743 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m6 5-3 3 3 3m4-6 3 3-3 3' fill='none' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 15px 15px no-repeat;
  position:relative;margin-top:1px;
 }
 .budget-track{position:absolute;inset:calc(50% - 4px) calc(var(--budget-thumb) / 2) auto;height:8px;border-radius:2px;background:#dce3e0;pointer-events:none}
@@ -412,16 +411,23 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
 }
 [data-price-settled] .budget-track span{background:#89b79e}
 .budget-ruler input{
- position:relative;display:block;appearance:none;width:100%;height:30px;margin:0;
- border:0;background:transparent;cursor:ew-resize;
+ position:relative;display:block;-webkit-appearance:none;appearance:none;width:100%;height:30px;margin:0;
+ border:0;background:transparent;cursor:ew-resize;touch-action:pan-y pinch-zoom;
 }
 .budget-ruler input:focus-visible{outline-offset:-2px;border-radius:3px}
 .budget-ruler input::-webkit-slider-runnable-track{height:8px;background:transparent}
 .budget-ruler input::-moz-range-track{height:8px;background:transparent}
 .budget-ruler input::-webkit-slider-thumb{
- appearance:none;width:var(--budget-thumb);height:24px;margin-top:-8px;border:0;background:var(--budget-pin);
+ -webkit-appearance:none;appearance:none;margin-top:calc((8px - var(--budget-thumb)) / 2);
+ box-sizing:border-box;width:var(--budget-thumb);height:var(--budget-thumb);
+ border:2px solid #fff;border-radius:50%;background:var(--budget-thumb-fill);
+ box-shadow:0 0 0 1px #005743,0 2px 5px #113a2e40;
 }
-.budget-ruler input::-moz-range-thumb{width:var(--budget-thumb);height:24px;border:0;background:var(--budget-pin)}
+.budget-ruler input::-moz-range-thumb{
+ box-sizing:border-box;width:var(--budget-thumb);height:var(--budget-thumb);
+ border:2px solid #fff;border-radius:50%;background:var(--budget-thumb-fill);
+ box-shadow:0 0 0 1px #005743,0 2px 5px #113a2e40;
+}
 .budget-verdict{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 7px;min-height:30px;color:var(--muted);font-size:12px;line-height:1.25}
 .budget-verdict strong{color:var(--green);font-weight:750}
 [data-budget-status="tight"] .budget-verdict strong{color:#80500e}
@@ -787,7 +793,8 @@ button,summary{cursor:pointer}button:disabled{cursor:default}
  .shell > .process-dock .chain-line{top:13px}
  .address-form{gap:5px;margin-top:9px}
  .segmented button,.scenario-tabs button{min-height:36px}
- .budget-ruler input{height:42px}
+ .budget-ruler{--budget-thumb:30px}
+ .budget-ruler input{height:44px}
  .model-layout{border-top:1px solid var(--line)}
  #modul-01.is-current ~ .model-layout .model-art,
  .model-frame:not([data-cover-comparison],[data-scenario-comparison]) .model-art,
@@ -1888,15 +1895,15 @@ html:not([data-motion="off"]) .field :is(input, select, textarea):focus, .m-inpu
           </div>
           <div>
             <dt><i class="budget-key-limit" aria-hidden="true"></i><label for="budget-limit">Budget einstellen</label></dt>
-            <dd id="budget-amount">115.000 €</dd>
+            <dd id="budget-amount">110.000 €</dd>
           </div>
         </dl>
         <div class="budget-ruler">
           <div class="budget-track" aria-hidden="true"><span></span></div>
-          <input id="budget-limit" type="range" min="70000" max="130000" step="1000" value="115000"
-            aria-describedby="budget-forecast-label budget-forecast-amount" aria-valuetext="115.000 Euro" title="Budget einstellen">
+          <input id="budget-limit" type="range" min="70000" max="130000" step="1000" value="110000"
+            aria-describedby="budget-forecast-label budget-forecast-amount" aria-valuetext="110.000 Euro" title="Budget einstellen">
         </div>
-        <p class="budget-verdict" role="status"><strong id="budget-status">Im Budget</strong><span id="budget-detail">5.000 € Puffer selbst am oberen Ende.</span></p>
+        <p class="budget-verdict" role="status"><strong id="budget-status">Im Budget</strong><span id="budget-detail">Das obere Ende entspricht Ihrem Budget.</span></p>
         <p class="price-note">Kalkulationsziel ±10 % um die Schätzung. €-Stufen zeigen die relative Investitionshöhe.</p>
       </section>
       <div class="archive-card feature-card">

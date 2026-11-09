@@ -187,9 +187,38 @@ h2{font-size:clamp(32px,9.2vw,40px)}
 .budget-values{display:flex;justify-content:space-between;gap:7px;margin:10px 0 8px}
 .budget-values p{color:var(--muted);font-size:12px;font-weight:650}
 .budget-values strong{font-size:16px;font-weight:770;white-space:nowrap}
-.budget-line{position:relative;height:7px;background:#dce4de;margin:12px 3px}
-.budget-line::before{content:"";position:absolute;inset:0 33.333% 0 33.333%;background:#91bfa6;border-inline:1px solid #4c7e6b}
-.budget-line::after{content:"";position:absolute;top:-6px;left:75%;height:19px;width:2px;background:#263f48}
+.budget-control{
+ --budget-thumb:30px;
+ --budget-thumb-fill:#005743 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m6 5-3 3 3 3m4-6 3 3-3 3' fill='none' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 15px 15px no-repeat;
+ position:relative;margin-block:3px;
+}
+.budget-line{
+ position:absolute;inset:calc(50% - 4px) calc(var(--budget-thumb) / 2) auto;
+ height:8px;border-radius:2px;background:#dce4de;pointer-events:none;
+}
+.budget-line::before{
+ content:"";position:absolute;inset:0 var(--budget-band-right,33.333%) 0 var(--budget-band-left,33.333%);
+ background:#91bfa6;border-inline:1px solid #4c7e6b;
+}
+.budget-control input{
+ position:relative;display:block;-webkit-appearance:none;appearance:none;
+ width:100%;height:44px;margin:0;border:0;background:transparent;
+ cursor:ew-resize;touch-action:pan-y pinch-zoom;
+}
+.budget-control input::-webkit-slider-runnable-track{height:8px;background:transparent}
+.budget-control input::-moz-range-track{height:8px;background:transparent}
+.budget-control input::-webkit-slider-thumb{
+ -webkit-appearance:none;appearance:none;margin-top:calc((8px - var(--budget-thumb)) / 2);
+ box-sizing:border-box;width:var(--budget-thumb);height:var(--budget-thumb);
+ border:2px solid #fff;border-radius:50%;background:var(--budget-thumb-fill);
+ box-shadow:0 0 0 1px #005743,0 2px 5px #113a2e40;
+}
+.budget-control input::-moz-range-thumb{
+ box-sizing:border-box;width:var(--budget-thumb);height:var(--budget-thumb);
+ border:2px solid #fff;border-radius:50%;background:var(--budget-thumb-fill);
+ box-shadow:0 0 0 1px #005743,0 2px 5px #113a2e40;
+}
+.budget-control input:focus-visible{outline-offset:-2px;border-radius:3px}
 .verdict{font-size:13px;line-height:1.35}
 .verdict b{color:var(--green);margin-right:4px}
 .budget .target{margin-top:5px;color:var(--muted);font-size:12px}
@@ -235,12 +264,6 @@ footer a{color:var(--green);font-weight:690;text-decoration:underline;text-under
 .mobile-lv-details-list dt{font-weight:690}
 .mobile-lv-details-list dd,.archive p{font-size:14px;color:var(--muted);margin:4px 0 0}
 .archive{margin:0;padding:0;list-style:none}
-.budget-line{height:7px;margin:0 9px}
-.budget-line::before{inset:0 var(--budget-band-right,33.333%) 0 var(--budget-band-left,33.333%)}
-.budget-line::after{left:var(--budget-position,75%)}
-.budget-control{display:grid;align-items:center;height:38px;position:relative;margin-block:3px}
-.budget-control input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;touch-action:pan-y pinch-zoom}
-.budget-control:focus-within{outline:2px solid #176e85;outline-offset:1px}
 .budget[data-state="tight"] .verdict b{color:#81500e}
 .budget[data-state="over"] .verdict b{color:#993e2e}
 @media(max-width:355px){
@@ -681,12 +704,12 @@ section:nth-of-type(even){--scene-paper:#f1f5ef}
     <h3>Budgetcheck für Effizienzhaus 40 <span class="flag a" aria-label="Klasse A im Beispiel">A</span></h3>
     <div class="budget-values">
       <div><p>Erwartete Kosten</p><strong>90.000–110.000 €</strong></div>
-      <div><p><label for="mobile-budget-range">Budget einstellen</label></p><strong id="mobile-budget-value">115.000 €</strong></div>
+      <div><p><label for="mobile-budget-range">Budget einstellen</label></p><strong id="mobile-budget-value">110.000 €</strong></div>
     </div>
     <div class="budget-control"><div class="budget-line" aria-hidden="true"></div>
-      <input id="mobile-budget-range" type="range" min="70000" max="130000" step="1000" value="115000" aria-valuetext="115.000 Euro">
+      <input id="mobile-budget-range" type="range" min="70000" max="130000" step="1000" value="110000" aria-valuetext="110.000 Euro">
     </div>
-    <p class="verdict" role="status"><b id="mobile-budget-status">Im Budget</b><span id="mobile-budget-detail">5.000 € Puffer am oberen Ende.</span></p>
+    <p class="verdict" role="status"><b id="mobile-budget-status">Im Budget</b><span id="mobile-budget-detail">Das obere Ende entspricht Ihrem Budget.</span></p>
     <p class="target">Kalkulationsziel ±10 % um die Schätzung.</p>
   </div>
   <details class="disclosure"><summary class="extra">Projektakte öffnen <b aria-hidden="true">+</b></summary>
@@ -929,7 +952,6 @@ section:nth-of-type(even){--scene-paper:#f1f5ef}
     const amount = budgetRange.valueAsNumber;
     budgetValue.textContent = euro(amount);
     budgetRange.setAttribute('aria-valuetext', formatNumber.format(amount) + ' Euro');
-    budget.style.setProperty('--budget-position', budgetPosition(amount) + '%');
 
     if (amount >= high) {
       budget.dataset.state = 'within';
